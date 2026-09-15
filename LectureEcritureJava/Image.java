@@ -1,5 +1,5 @@
+import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.io.IOException;
 
 public class Image {
@@ -35,19 +35,52 @@ public class Image {
      * Sauvegarde l'image au format texte PPM (P3)
      */
     public void save_txt(String filename) throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(filename));
+        FileWriter writer = new FileWriter(filename);
         
-        writer.println("P3");
-        writer.println(width + " " + height);
-        writer.println("255");
+        writer.write("P3\n");
+        writer.write(width + " " + height +"\n");
+        writer.write("255\n");
+
+        int r,g,b;
+        
         for (int y = 0; y < height; y++) { 
             for (int x = 0; x < width; x++) { 
-                for (int i = 0; i < 3; i++) {
-                    writer.print(pixels[y][x][i] + " ");
-                } 
+                r = pixels[y][x][0];
+                g = pixels[y][x][1];
+                b = pixels[y][x][2];
+
+                // Ecrit les couleurs sous forme texte
+                writer.write(r + " " + g + " " + b + " ");
             }
-            writer.println();
+            writer.write("\n");
         }
         writer.close();
     }
+
+    /**
+     * Sauvegarde l'image au binaire PPM (P6)
+     */
+    public void write_bin(String filename) throws IOException {
+        FileOutputStream fileStream = new FileOutputStream(filename);
+        
+        byte[] couleur = new byte[3];
+
+        fileStream.write(("P6\n").getBytes());
+        fileStream.write((width + " " + height +"\n").getBytes());
+        fileStream.write(("255\n").getBytes());
+      
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {      
+                // Convertit les couleurs en octets 
+                couleur[0] = (byte) pixels[y][x][0];
+                couleur[1] = (byte) pixels[y][x][1];
+                couleur[2] = (byte) pixels[y][x][2];
+
+                // Ecrit les 3 octets du pixel
+                fileStream.write(couleur);
+            }
+        }
+        fileStream.close();
+    }
+    
 }
