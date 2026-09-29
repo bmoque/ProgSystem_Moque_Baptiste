@@ -36,7 +36,6 @@ public class MemoryManager {
         for (int octetIndex = 0; octetIndex < 129/8; octetIndex++) {
                 memory[BITMAP_OFFSET + octetIndex] = (byte) 0xFF;
         }
-        memory[BITMAP_OFFSET + 16] = (byte) 0x01;
     }
 
     private void writeSuperblock() {
@@ -127,12 +126,18 @@ public class MemoryManager {
 
     public int allocateBlock() {
 
-        // TODO:
         // Parcourir les blocs de données :
         // 129 .. NUM_BLOCKS - 1.
-        //
-        // Retourner le premier bloc libre.
-        // Le marquer immédiatement comme utilisé.
+        for(int block = 129; block < NUM_BLOCKS; block++) {
+            
+            if (isBlockUsed(block) == 0) {
+                // Le marquer immédiatement comme utilisé.
+                setBlockUsed(block, true);
+                
+                // Retourner le premier bloc libre.
+                return block;
+            }
+        }
 
         return -1;
     }
