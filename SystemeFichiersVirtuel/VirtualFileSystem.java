@@ -179,4 +179,40 @@ public class VirtualFileSystem {
 
         return fileData; 
     }
+
+    public boolean deleteFile(int inodeNum) {
+        Inode inode = new Inode(memoryManager,inodeNum);
+
+        if (inode.getFileType() == 0) {
+            return false;
+        }
+
+        int fileSize = inode.getFileSize();
+        int blocksNeeded = (fileSize + MemoryManager.BLOCK_SIZE - 1) / MemoryManager.BLOCK_SIZE;
+
+        int[] blockPointers =
+                inode.getDirectPointers();  
+
+        for (int i = 0; i < blocksNeeded; i++) {
+            int blockNum = blockPointers[i];
+            if (blockNum > 0 ) {
+                memoryManager.setBlockUsed(blockNum,false);
+            }
+        }  
+
+        long currentTime = System.currentTimeMillis();
+        inode.writeToMemory(
+            0,              // fileType
+            0,              // fileSize 
+            currentTime,    // Date de création
+            currentTime,    // Date de modification
+            new int[Inode.DIRECT_POINTERS],  // Pointeurs direct
+            0,              // Pointeur indirect
+            (short)644,     // Permissions 
+            1               // Nombre de liens 
+        );
+
+        return true;
+
+    }
 }
