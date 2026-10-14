@@ -1,9 +1,9 @@
 public class Calcule extends Thread {
-    // TODO: Déclarer les attributs nécessaires
 
     private int valeur;
     private int multiplicateur;
     private final int index;
+    private long resultat = 0;
 
     public Calcule(int valeur,int multiplicateur,int index) {
         this.valeur = valeur;
@@ -13,13 +13,13 @@ public class Calcule extends Thread {
 
     @Override
     public void run() {
-        // TODO: Implémenter le calcul intensif
-        valeur = valeur * (valeur + 1) * multiplicateur;
-        // Même logique que dans la boucle interne de CalculSequentiel
+        for (int j = 0; j < multiplicateur; j++) {
+            resultat += (long) valeur * valeur + valeur;
+        }
     }
 
-    public int getResultat() {
-        return valeur;
+    public long getResultat() {
+        return resultat;
     }
 
 }

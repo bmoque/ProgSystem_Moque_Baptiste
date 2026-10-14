@@ -5,8 +5,6 @@ public class CalculParallele  {
 
     private static Calcule[] threads = new Calcule[DONNEES.length];
 
-    private static int somme;
-
     public static void main(String[] args) {
         long debut = System.nanoTime();
         long sommeTotal = 0;
@@ -16,18 +14,17 @@ public class CalculParallele  {
             threads[i] = th;
             th.start();
         }
-        somme = 0;
         for (Calcule thread : threads) {
             try {
                 thread.join(); 
-                somme += thread.getResultat();
+                sommeTotal += thread.getResultat();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         
         long duree = (System.nanoTime() - debut) / 1_000_000;
-        System.out.println("Résultat : " + somme);
+        System.out.println("Résultat : " + sommeTotal);
         System.out.println("Durée : " + duree + " ms");
 
         
