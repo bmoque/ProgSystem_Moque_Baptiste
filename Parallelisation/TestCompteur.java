@@ -11,6 +11,10 @@ public class TestCompteur  {
     }
 
     private static void testRaceCondition() {
+        int succesCount = 0;
+        long minValeur = Long.MAX_VALUE;
+        long maxValeur = Long.MIN_VALUE;
+
 
         for (int i = 0; i < NB_TESTS; i++) {
             CompteurDangereux.resetCompteur();
@@ -32,8 +36,27 @@ public class TestCompteur  {
 
 
             long resultatObtenu = CompteurDangereux.getCompteur();
-            System.out.println("Test " + i + "  Résultat : " + resultatObtenu + "  Attendu : " + VALEUR_ATTENDUE + "\n");
-
+            if (resultatObtenu == VALEUR_ATTENDUE) {
+                succesCount++;
+            }
+            if (resultatObtenu < minValeur) {
+                minValeur = resultatObtenu;
+            }
+            if (resultatObtenu > maxValeur) {
+                maxValeur = resultatObtenu;
+            }
         }    
+
+
+        double pourcentageSucces = ((double) succesCount / NB_TESTS) * 100.0;
+
+        System.out.println("\n Statistiques");
+        System.out.println("Nombre de réussites : " + succesCount + " / " + NB_TESTS);
+        System.out.println("Pourcentage de réussite : " + pourcentageSucces + "%");
+        System.out.println("Valeur minimale observée : " + minValeur);
+        System.out.println("Valeur maximale observée : " + maxValeur);
+
+
+
     }
 }    
